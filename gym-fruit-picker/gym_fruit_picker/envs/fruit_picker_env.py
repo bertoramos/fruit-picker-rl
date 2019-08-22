@@ -17,8 +17,8 @@ class FruitPickerEnv(gym.Env):
 
     def __init__(self):
         # screen
-        self.vp_width = 200
-        self.vp_height = 200
+        self.world_width = 200
+        self.world_height = 200
         self.scale = 40
 
         self.setup()
@@ -26,23 +26,23 @@ class FruitPickerEnv(gym.Env):
         # env
         self.action_space = gym.spaces.Discrete(3) # 0 = LEFT; 1 = RIGHT; 2 = NOTHING;
 
-        low = np.array([[ [0, 0, 0] for _ in range(self.vp_width)] for _ in range(self.vp_height)], dtype=np.uint8)
-        high = np.array([[ [255, 255, 255] for _ in range(self.vp_width)] for _ in range(self.vp_height)], dtype=np.uint8)
+        low = np.array([[ [0, 0, 0] for _ in range(self.world_width)] for _ in range(self.world_height)], dtype=np.uint8)
+        high = np.array([[ [255, 255, 255] for _ in range(self.world_width)] for _ in range(self.world_height)], dtype=np.uint8)
 
         self.observation_space = gym.spaces.Box(low=low,
                                                 high=high)
 
     def setup(self):
-        self.viewer = rendering.Viewer(self.vp_width, self.vp_height)
-        self.viewer.set_bounds(0, self.vp_width / self.scale, 0, self.vp_height / self.scale)
+        self.viewer = rendering.Viewer(self.world_width, self.world_height)
+        self.viewer.set_bounds(0, self.world_width / self.scale, 0, self.world_height / self.scale)
 
         # world
 
-        self.fruit = Fruit(pos0=Position(x=50, y=self.vp_height),
+        self.fruit = Fruit(pos0=Position(x=50, y=self.world_height),
                            size=Size(width=10, height=10),
                            dy=3)
 
-        self.picker = Picker(pos0=Position(x=int(self.vp_width / 2), y=10),
+        self.picker = Picker(pos0=Position(x=int(self.world_width / 2), y=10),
                              dx=8,
                              size=Size(40, 10))
         self.fd = FruitDrawer(self.viewer, self.scale, self.fruit, color=(.9, .1, .1))
@@ -53,7 +53,7 @@ class FruitPickerEnv(gym.Env):
         self.fruit.move()
         self.picker.move(
             action=action_enum,
-            limit=Limit(top=self.vp_height, bottom=0, left=0, right=self.vp_width)
+            limit=Limit(top=self.world_height, bottom=0, left=0, right=self.world_width)
         )
 
         if picker_control(self.picker, self.fruit):
@@ -71,8 +71,8 @@ class FruitPickerEnv(gym.Env):
         return self.viewer.get_array(),\
                int(reward),\
                done,\
-               {'rgb uint8 np.array(shape=(' + str(self.vp_height) + "," +
-                                                str(self.vp_width) + "," +
+               {'rgb uint8 np.array(shape=(' + str(self.world_height) + "," +
+                                                str(self.world_width) + "," +
                                                 str(3) + '))'}
 
     def reset(self):

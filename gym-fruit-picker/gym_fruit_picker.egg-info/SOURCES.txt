@@ -1,0 +1,6 @@
+setup.py
+gym_fruit_picker.egg-info/PKG-INFO
+gym_fruit_picker.egg-info/SOURCES.txt
+gym_fruit_picker.egg-info/dependency_links.txt
+gym_fruit_picker.egg-info/requires.txt
+gym_fruit_picker.egg-info/top_level.txt
